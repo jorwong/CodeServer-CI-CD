@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vscode
+spec:
+  selector:
+    matchLabels:
+      app: vscode
+  template:
+    metadata:
+      labels:
+        app: vscode
+    spec:
+      containers:
+        - name: vscode
+          image: codercom/code-server:3.10.2
+          volumeMounts:
+            - mountPath: "home/coder/.config/code-server"
+              name: configvolume
+          args:
+            - "sudo su coder"
+            - "code server"
+          ports:
+            - containerPort: 8080
+      securityContext:
+        runAsUser: 0
+      volumes:
+        - name: configvolume
+          configMap:
+            name: configfile
+# Problem: I am currently having problem trying to change the port to the desired port. It is
+#         by default 8080. I have no idea why. My speculation is that, it is taking 0.0.0.0
+#         from the coder user's config.yaml while the port from root user config.yaml. This
+#         is not a cripling error but should be fixed.
+#
+# Mapping Command: kubectl create configmap configfile --from-file=/home/jordanwong10062000/config

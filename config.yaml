@@ -1,0 +1,4 @@
+bind-addr: 0.0.0.0:3625
+auth: password
+password: 38d800a91a5141b1859c8d72
+cert: false
